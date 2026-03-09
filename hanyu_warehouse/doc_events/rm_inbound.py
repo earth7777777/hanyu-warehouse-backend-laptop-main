@@ -23,7 +23,7 @@ def validate_rm_inbound(doc, method=None):
     _duplicate_lock(doc)
     _supplier_lock(doc)
 
-    # 第二批阶段二：来源类型锁 + 袋码记录
+    # phase-2 step: source type lock + pallet_id log
     _source_type_lock(doc)
     _bag_code_log(doc)
 
@@ -158,7 +158,7 @@ def _supplier_lock(doc):
         frappe.throw("身份锁：供应商字段(f02)未配置 Link 目标（options 为空）")
 
     if not frappe.db.exists(target_dt, supplier_value):
-        frappe.throw(f"身份锁：供应商不存在于")
+        frappe.throw(f"Identity lock: supplier does not exist in {target_dt}")
 
 
 def _source_type_lock(doc):
@@ -188,12 +188,12 @@ def _source_type_lock(doc):
 
 def _bag_code_log(doc):
     """
-    袋码记录（仅记录，不拦截）：
-    - f12 为外部袋码/条码，当前阶段只记录到 frappe log，不做校验
+    pallet_id record (log only, no blocking):
+    - f17 is reserved for pallet_id; f12 remains bag/barcode field
     """
-    bag_code = (doc.get("f12") or "").strip()
-    if bag_code:
+    pallet_id = (doc.get("f17") or "").strip()
+    if pallet_id:
         frappe.log_error(
-            title="[袋码记录]",
-            message=f"doc={doc.name}, f12={bag_code}"
+            title="[pallet_id record]",
+            message=f"doc={doc.name}, f17(pallet_id)={pallet_id}"
         )

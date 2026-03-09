@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "pallet_code",
+  "rm_inbound",
+  "supplier",
+  "posting_date",
+  "item_code",
+  "item_name",
+  "batch_no",
+  "qty",
+  "uom",
+  "warehouse",
+  "contents"
+ ],
+ "fields": [
+  {
+   "fieldname": "pallet_code",
+   "fieldtype": "Data",
+   "label": "Pallet Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rm_inbound",
+   "fieldtype": "Link",
+   "label": "RM Inbound",
+   "options": "RM Inbound",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Data",
+   "label": "Supplier"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "label": "Item Code"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Qty"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Data",
+   "label": "UOM"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Data",
+   "label": "Warehouse"
+  },
+  {
+   "fieldname": "contents",
+   "fieldtype": "Table",
+   "label": "Contents",
+   "options": "Pallet Contents"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "Pallet",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
