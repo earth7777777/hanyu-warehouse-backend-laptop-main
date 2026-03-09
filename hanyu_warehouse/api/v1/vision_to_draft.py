@@ -32,7 +32,7 @@ def create_rm_inbound_draft_from_receipt(receipt_photo=None, exception_reason=No
         "f04": overrides.get("f04"),                 # 实测毛重吨（可选）
         "f05": vis.get("package_quantity") or overrides.get("f05"),  # 袋数（可选）
         "f08": overrides.get("f08"),                 # Location（必须，混放锁）
-        "f09": receipt_photo or overrides.get("f09"),            # 签收照片（可空，但需 f10）
+        "f09": overrides.get("f09"),                            # 入库时间（datetime）
         "f10": exception_reason or overrides.get("f10"),         # 异常说明（证据锁）
         "f11": overrides.get("f11"),                 # remarks（可选）
     }
