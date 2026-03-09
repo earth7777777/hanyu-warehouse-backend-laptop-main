@@ -40,7 +40,7 @@ def create_rm_inbound_draft(payload=None):
         frappe.throw("AI inbound is disabled by Warehouse Settings")
 
     # 只接收 f01~f11（避免 AI 乱塞字段）
-    allowed = [f"f{str(i).zfill(2)}" for i in range(1, 12)]
+    allowed = [f"f{str(i).zfill(2)}" for i in range(1, 17)]
     doc_dict = {"doctype": "RM Inbound"}
 
     for k in allowed:

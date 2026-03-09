@@ -23,6 +23,11 @@ def validate_rm_inbound(doc, method=None):
     _duplicate_lock(doc)
     _supplier_lock(doc)
 
+    # 第二批阶段二：来源类型锁 + 袋码记录
+    _source_type_lock(doc)
+    _bag_code_log(doc)
+
+
 
 def _weight_audit(doc):
     """
@@ -155,3 +160,40 @@ def _supplier_lock(doc):
     if not frappe.db.exists(target_dt, supplier_value):
         frappe.throw(f"身份锁：供应商不存在于")
 
+
+def _source_type_lock(doc):
+    """
+    来源类型锁（拦截）：
+    - f13 为空视为新料
+    - f13 只允许"新料"或"回料"，其他值拦截
+    - f13=回料 时，f14 不能为空
+    - f13=新料 时，f14 强制置空
+    """
+    source_type = (doc.get("f13") or "").strip()
+    if not source_type:
+        source_type = "新料"
+        doc.f13 = "新料"
+
+    allowed_types = {"新料", "回料"}
+    if source_type not in allowed_types:
+        frappe.throw(f"来源类型锁：f13 只允许填写新料或回料，当前值：{source_type}")
+
+    if source_type == "回料":
+        regrind_class = (doc.get("f14") or "").strip()
+        if not regrind_class:
+            frappe.throw("来源类型锁：来源类型为回料时，必须填写回料分类（f14）")
+    else:
+        doc.f14 = ""
+
+
+def _bag_code_log(doc):
+    """
+    袋码记录（仅记录，不拦截）：
+    - f12 为外部袋码/条码，当前阶段只记录到 frappe log，不做校验
+    """
+    bag_code = (doc.get("f12") or "").strip()
+    if bag_code:
+        frappe.log_error(
+            title="[袋码记录]",
+            message=f"doc={doc.name}, f12={bag_code}"
+        )

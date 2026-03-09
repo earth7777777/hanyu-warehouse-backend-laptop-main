@@ -35,6 +35,11 @@ def create_rm_inbound_draft_from_receipt(receipt_photo=None, exception_reason=No
         "f09": overrides.get("f09"),                            # 入库时间（datetime）
         "f10": exception_reason or overrides.get("f10"),         # 异常说明（证据锁）
         "f11": overrides.get("f11"),                 # remarks（可选）
+        "f12": overrides.get("f12"),                 # 外部袋码 / 外部条码
+        "f13": overrides.get("f13"),                 # 来源类型（新料 / 回料）
+        "f14": overrides.get("f14"),                 # 回料分类
+        "f15": overrides.get("f15"),                 # 内部批次号
+        "f16": overrides.get("f16"),                 # 包级追踪标记
     }
 
     # 把预埋键回传，先不落库（阶段四约束）
