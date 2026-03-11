@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "ODC-.#####",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "outbound_id",
+  "from_machine_id",
+  "to_machine_id",
+  "from_work_order_id",
+  "to_work_order_id",
+  "from_purpose",
+  "to_purpose",
+  "reason",
+  "operator",
+  "timestamp"
+ ],
+ "fields": [
+  {
+   "fieldname": "outbound_id",
+   "fieldtype": "Link",
+   "label": "Outbound ID",
+   "options": "RM Outbound",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_machine_id",
+   "fieldtype": "Data",
+   "label": "From Machine ID"
+  },
+  {
+   "fieldname": "to_machine_id",
+   "fieldtype": "Data",
+   "label": "To Machine ID"
+  },
+  {
+   "fieldname": "from_work_order_id",
+   "fieldtype": "Data",
+   "label": "From Work Order ID"
+  },
+  {
+   "fieldname": "to_work_order_id",
+   "fieldtype": "Data",
+   "label": "To Work Order ID"
+  },
+  {
+   "fieldname": "from_purpose",
+   "fieldtype": "Data",
+   "label": "From Purpose"
+  },
+  {
+   "fieldname": "to_purpose",
+   "fieldtype": "Data",
+   "label": "To Purpose"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "operator",
+   "fieldtype": "Data",
+   "label": "Operator"
+  },
+  {
+   "default": "Now",
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Timestamp"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "Outbound Destination Change",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

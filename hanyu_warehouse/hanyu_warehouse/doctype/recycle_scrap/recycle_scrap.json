@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RCSP-.#####",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "recycle_batch_id",
+  "reason",
+  "loss_amount",
+  "closed_at",
+  "process_event_trace_json",
+  "is_close_applied"
+ ],
+ "fields": [
+  {
+   "fieldname": "recycle_batch_id",
+   "fieldtype": "Link",
+   "label": "Recycle Batch ID",
+   "options": "Recycle Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "loss_amount",
+   "fieldtype": "Currency",
+   "label": "Loss Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closed_at",
+   "fieldtype": "Datetime",
+   "label": "Closed At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "process_event_trace_json",
+   "fieldtype": "Long Text",
+   "label": "Process Event Trace JSON",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_close_applied",
+   "fieldtype": "Check",
+   "label": "Is Close Applied",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "Recycle Scrap",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

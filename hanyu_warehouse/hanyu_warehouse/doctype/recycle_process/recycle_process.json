@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RCP-.#####",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "recycle_batch_id",
+  "process_type",
+  "total_cost",
+  "cost_breakdown",
+  "remarks",
+  "is_applied",
+  "applied_at",
+  "batch_total_before_apply",
+  "batch_total_after_apply"
+ ],
+ "fields": [
+  {
+   "fieldname": "recycle_batch_id",
+   "fieldtype": "Link",
+   "label": "Recycle Batch ID",
+   "options": "Recycle Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "process_type",
+   "fieldtype": "Data",
+   "label": "Process Type"
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "Total Cost",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_breakdown",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Cost Breakdown",
+   "options": "Recycle Process Cost Row"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_applied",
+   "fieldtype": "Check",
+   "label": "Is Applied",
+   "read_only": 1
+  },
+  {
+   "fieldname": "applied_at",
+   "fieldtype": "Datetime",
+   "label": "Applied At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batch_total_before_apply",
+   "fieldtype": "Currency",
+   "label": "Batch Total Before Apply",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batch_total_after_apply",
+   "fieldtype": "Currency",
+   "label": "Batch Total After Apply",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "Recycle Process",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

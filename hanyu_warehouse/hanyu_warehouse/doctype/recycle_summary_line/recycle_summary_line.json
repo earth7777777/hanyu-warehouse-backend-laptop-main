@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "row_id",
+  "source_machine_id",
+  "shift",
+  "source_item_code",
+  "source_batch_no",
+  "source_qty",
+  "grade_usability"
+ ],
+ "fields": [
+  {
+   "fieldname": "row_id",
+   "fieldtype": "Data",
+   "label": "Row ID"
+  },
+  {
+   "fieldname": "source_machine_id",
+   "fieldtype": "Data",
+   "label": "Source Machine ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Data",
+   "label": "Shift",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_item_code",
+   "fieldtype": "Data",
+   "label": "Source Item Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_batch_no",
+   "fieldtype": "Data",
+   "label": "Source Batch No"
+  },
+  {
+   "fieldname": "source_qty",
+   "fieldtype": "Float",
+   "label": "Source Qty"
+  },
+  {
+   "fieldname": "grade_usability",
+   "fieldtype": "Select",
+   "label": "Grade Usability",
+   "options": "可直接用\n需拉丝后可用",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "Recycle Summary Line",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

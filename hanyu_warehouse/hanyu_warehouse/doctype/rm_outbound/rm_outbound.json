@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RMO-.#####",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "posting_date",
+  "pallet_id",
+  "outbound_mode",
+  "source_location_id",
+  "item_code",
+  "batch_no",
+  "qty",
+  "uom",
+  "machine_id",
+  "work_order_id",
+  "purpose",
+  "machine_required_effective",
+  "is_posted",
+  "posted_at",
+  "available_qty_before_post",
+  "available_qty_after_post"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "pallet_id",
+   "fieldtype": "Link",
+   "label": "Pallet",
+   "options": "Pallet"
+  },
+  {
+   "fieldname": "outbound_mode",
+   "fieldtype": "Select",
+   "label": "Outbound Mode",
+   "options": "Pallet\nManual",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_location_id",
+   "fieldtype": "Data",
+   "label": "Source Location ID"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "label": "Item Code"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Qty",
+   "reqd": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Data",
+   "label": "UOM"
+  },
+  {
+   "fieldname": "machine_id",
+   "fieldtype": "Data",
+   "label": "Machine ID"
+  },
+  {
+   "fieldname": "work_order_id",
+   "fieldtype": "Data",
+   "label": "Work Order ID"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Data",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "machine_required_effective",
+   "fieldtype": "Check",
+   "label": "Machine Required Effective",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_posted",
+   "fieldtype": "Check",
+   "label": "Is Posted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posted_at",
+   "fieldtype": "Datetime",
+   "label": "Posted At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_qty_before_post",
+   "fieldtype": "Float",
+   "label": "Available Qty Before Post",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_qty_after_post",
+   "fieldtype": "Float",
+   "label": "Available Qty After Post",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "RM Outbound",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

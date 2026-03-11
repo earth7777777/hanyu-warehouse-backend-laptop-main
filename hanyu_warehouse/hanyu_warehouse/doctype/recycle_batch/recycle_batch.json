@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RCB-.#####",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "source_machine_id",
+  "shift",
+  "source_item_code",
+  "source_batch_no",
+  "source_qty",
+  "grade_usability",
+  "process_status",
+  "total_cost_accumulated",
+  "is_closed",
+  "created_from_summary",
+  "created_from_summary_row_id",
+  "closed_by_scrap",
+  "closed_at"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_machine_id",
+   "fieldtype": "Data",
+   "label": "Source Machine ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Data",
+   "label": "Shift",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_item_code",
+   "fieldtype": "Data",
+   "label": "Source Item Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_batch_no",
+   "fieldtype": "Data",
+   "label": "Source Batch No"
+  },
+  {
+   "fieldname": "source_qty",
+   "fieldtype": "Float",
+   "label": "Source Qty"
+  },
+  {
+   "fieldname": "grade_usability",
+   "fieldtype": "Select",
+   "label": "Grade Usability",
+   "options": "可直接用\n需拉丝后可用",
+   "reqd": 1
+  },
+  {
+   "default": "未处理",
+   "fieldname": "process_status",
+   "fieldtype": "Select",
+   "label": "Process Status",
+   "options": "未处理\n已拉丝\n已报废处置",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_cost_accumulated",
+   "fieldtype": "Currency",
+   "label": "Total Cost Accumulated"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_closed",
+   "fieldtype": "Check",
+   "label": "Is Closed"
+  },
+  {
+   "fieldname": "created_from_summary",
+   "fieldtype": "Link",
+   "label": "Created From Summary",
+   "options": "Recycle Summary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_from_summary_row_id",
+   "fieldtype": "Data",
+   "label": "Created From Summary Row ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closed_by_scrap",
+   "fieldtype": "Link",
+   "label": "Closed By Scrap",
+   "options": "Recycle Scrap",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closed_at",
+   "fieldtype": "Datetime",
+   "label": "Closed At",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "module": "Hanyu Warehouse",
+ "name": "Recycle Batch",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
