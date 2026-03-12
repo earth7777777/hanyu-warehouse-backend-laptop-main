@@ -121,14 +121,14 @@ Use the real repository boundary filled by the project owner.
 
 Only edit files inside the approved paths below:
 
-- `/home/yue/frappe-bench/apps/hanyu_warehouse`
-- `/home/yue/frappe-bench/apps/hanyu_warehouse/hanyu_warehouse`
+- `/home/yue/hanyu-pwa`
+- `/home/yue/hanyu-pwa/src`
 
 ### Forbidden paths
 
 Do not edit files inside the forbidden paths below:
 
-- `/home/yue/hanyu-pwa`
+- `/home/yue/frappe-bench/apps/hanyu_warehouse`
 - `/home/yue/frappe-bench/sites`
 - `/home/yue/frappe-bench/env`
 

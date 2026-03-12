@@ -225,33 +225,57 @@ class RMOutbound(Document):
         return None
 
     def _get_rm_inbound_balance_qty(self, source_location_id, item_code, batch_no):
-        conditions = [
+        exact_conditions = [
             "docstatus=1",
             f"ifnull({RM_INBOUND_FIELD_SOURCE_LOCATION}, '')=%s",
             f"ifnull({RM_INBOUND_FIELD_ITEM_CODE}, '')=%s",
             f"ifnull({RM_INBOUND_FIELD_BATCH_NO}, '')=%s",
         ]
-        values = [source_location_id, item_code, batch_no or ""]
+        exact_values = [source_location_id, item_code, batch_no or ""]
 
-        sql = (
+        exact_sql = (
             f"select count(*) as row_count, coalesce(sum({RM_INBOUND_FIELD_QTY}), 0) as total_qty "
             f"from `tab{RM_INBOUND_BALANCE_DTYPE}` "
-            f"where {' and '.join(conditions)}"
+            f"where {' and '.join(exact_conditions)}"
         )
 
         try:
-            result = frappe.db.sql(sql, values, as_dict=True)
+            exact_result = frappe.db.sql(exact_sql, exact_values, as_dict=True)
         except Exception:
             return None
 
-        if not result:
+        if not exact_result:
             return None
 
-        row = result[0] or {}
-        if cint(row.get("row_count")) <= 0:
+        exact_row = exact_result[0] or {}
+        if cint(exact_row.get("row_count")) > 0:
+            return flt(exact_row.get("total_qty"))
+
+        baseline_conditions = [
+            "docstatus=1",
+            f"ifnull({RM_INBOUND_FIELD_SOURCE_LOCATION}, '')=%s",
+            f"ifnull({RM_INBOUND_FIELD_ITEM_CODE}, '')=%s",
+        ]
+        baseline_values = [source_location_id, item_code]
+        baseline_sql = (
+            "select count(*) as row_count "
+            f"from `tab{RM_INBOUND_BALANCE_DTYPE}` "
+            f"where {' and '.join(baseline_conditions)}"
+        )
+
+        try:
+            baseline_result = frappe.db.sql(baseline_sql, baseline_values, as_dict=True)
+        except Exception:
             return None
 
-        return flt(row.get("total_qty"))
+        if not baseline_result:
+            return None
+
+        baseline_row = baseline_result[0] or {}
+        if cint(baseline_row.get("row_count")) > 0:
+            return 0
+
+        return None
 
     def _get_consumed_outbound_qty(self, source_location_id, item_code, batch_no):
         conditions = [

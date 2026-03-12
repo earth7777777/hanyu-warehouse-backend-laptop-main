@@ -311,14 +311,28 @@ def reroute(
         from_purpose = outbound_doc.get("purpose")
 
         to_machine_value = _to_str(to_machine_id) or _to_str(data.get("to_machine_id"))
-        to_work_order_value = _to_str(to_work_order_id) or _to_str(data.get("to_work_order_id"))
-        to_purpose_value = _to_str(to_purpose) or _to_str(data.get("to_purpose"))
+
+        to_work_order_missing = to_work_order_id is None and "to_work_order_id" not in data
+        if to_work_order_id is not None:
+            to_work_order_value = _to_str(to_work_order_id)
+        elif "to_work_order_id" in data:
+            to_work_order_value = _to_str(data.get("to_work_order_id"))
+        else:
+            to_work_order_value = ""
+
+        to_purpose_missing = to_purpose is None and "to_purpose" not in data
+        if to_purpose is not None:
+            to_purpose_value = _to_str(to_purpose)
+        elif "to_purpose" in data:
+            to_purpose_value = _to_str(data.get("to_purpose"))
+        else:
+            to_purpose_value = ""
 
         if not to_machine_value:
             to_machine_value = _to_str(from_machine_id)
-        if not to_work_order_value:
+        if to_work_order_missing:
             to_work_order_value = _to_str(from_work_order_id)
-        if not to_purpose_value:
+        if to_purpose_missing:
             to_purpose_value = _to_str(from_purpose)
 
         if (
