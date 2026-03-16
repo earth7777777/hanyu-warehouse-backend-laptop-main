@@ -18,6 +18,8 @@ def validate_rm_inbound(doc, method=None):
     _weight_audit(doc)
     _location_mix_lock(doc)
     _f01_required_lock(doc)
+    _f02_required_lock(doc)
+    _f03_required_lock(doc)
     _f08_required_lock(doc)
 
     # 再追加三把锁（按您要求“加在下面”）
@@ -138,6 +140,73 @@ def _f01_required_lock(doc):
         frappe.throw("字段规则：f01(入库物料)不能为空")
 
 
+def _is_f02_required_by_settings() -> bool:
+    """
+    f02 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f02' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f02":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f02_required_lock(doc):
+    """
+    f02 必填锁（只处理 f02）：
+    - 配置为必填时，f02 为空则拦截
+    """
+    if not _is_f02_required_by_settings():
+        return
+    if not (doc.get("f02") or "").strip():
+        frappe.throw("身份锁：供应商不能为空")
+
+
+def _is_f03_required_by_settings() -> bool:
+    """
+    f03 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f03' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    - 配置读取异常时写 Error Log，避免静默吞掉
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        frappe.log_error(
+            title="[f03 required settings read failed]",
+            message=frappe.get_traceback(),
+        )
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f03":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f03_required_lock(doc):
+    """
+    f03 必填锁（只处理 f03）：
+    - 配置为必填时，f03 为空则拦截
+    """
+    if not _is_f03_required_by_settings():
+        return
+    if not (doc.get("f03") or "").strip():
+        frappe.throw("字段规则：f03(送货单号)不能为空")
+
+
 def _is_f08_required_by_settings() -> bool:
     """
     f08 必填开关（配置驱动）：
@@ -212,7 +281,7 @@ def _supplier_lock(doc):
     """
     supplier_value = (doc.get("f02") or "").strip()
     if not supplier_value:
-        frappe.throw("身份锁：供应商不能为空")
+        return
 
     meta = frappe.get_meta("RM Inbound")
     fld = meta.get_field("f02")
