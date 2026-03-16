@@ -14,13 +14,20 @@ def validate_rm_inbound(doc, method=None):
     5) 身份锁：校验 f02(供应商) Link 目标中必须存在该供应商，否则拦截
     """
 
+    _f11_required_lock(doc)
+
     # 先保留您原来已经跑通的两件事（顺序不动）
     _weight_audit(doc)
     _location_mix_lock(doc)
     _f01_required_lock(doc)
     _f02_required_lock(doc)
     _f03_required_lock(doc)
+    _f04_required_lock(doc)
+    _f05_required_lock(doc)
+    _f06_required_lock(doc)
+    _f07_required_lock(doc)
     _f08_required_lock(doc)
+    _f10_required_lock(doc)
 
     # 再追加三把锁（按您要求“加在下面”）
     _evidence_lock(doc)
@@ -58,7 +65,23 @@ def _weight_audit(doc):
 
     # 偏差阈值：1%（写预警到备注）
     if diff_ratio > 0.01:
-        warning = "[系统预警] 实收吨数与袋数换算偏差超过 1%"
+        actual_tons = float(gross_tons)
+        actual_bags = float(bag_count)
+        expected_bags = (actual_tons * 1000.0) / float(bag_weight_kg)
+        bag_diff = actual_bags - expected_bags
+        ton_diff = abs(actual_tons - expected_tons)
+
+        if bag_diff > 0:
+            bag_delta_text = f"多{abs(bag_diff):.1f}袋"
+        elif bag_diff < 0:
+            bag_delta_text = f"少{abs(bag_diff):.1f}袋"
+        else:
+            bag_delta_text = "袋数一致"
+
+        warning = (
+            f"[系统预警] 实收{actual_tons:.3f}吨；按{bag_weight_kg:.1f}kg/袋应约{expected_bags:.1f}袋；"
+            f"当前填{actual_bags:.1f}袋（{bag_delta_text}）；重量偏差{ton_diff:.3f}吨（{diff_ratio * 100:.1f}%）"
+        )
         if warning not in remark:
             doc.f11 = (remark + ("\n" if remark else "") + warning).strip()
 
@@ -207,6 +230,174 @@ def _f03_required_lock(doc):
         frappe.throw("字段规则：f03(送货单号)不能为空")
 
 
+def _is_f04_required_by_settings() -> bool:
+    """
+    f04 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f04' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        frappe.log_error(
+            title="[f04 required settings read failed]",
+            message=frappe.get_traceback(),
+        )
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f04":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _is_f04_effectively_missing(value) -> bool:
+    """
+    f04 未填写判定：
+    - 空值、空串、0/0.0/0.000 都视为未填写
+    """
+    if value is None:
+        return True
+
+    text = str(value).strip()
+    if not text:
+        return True
+
+    try:
+        return float(text) == 0.0
+    except Exception:
+        return False
+
+
+def _f04_required_lock(doc):
+    """
+    f04 必填锁（只处理 f04）：
+    - 配置为必填时，f04 为空或为 0 则拦截
+    """
+    if not _is_f04_required_by_settings():
+        return
+    if _is_f04_effectively_missing(doc.get("f04")):
+        frappe.throw("字段规则：f04(实测毛重(吨))不能为空或0")
+
+
+def _is_f05_required_by_settings() -> bool:
+    """
+    f05 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f05' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        frappe.log_error(
+            title="[f05 required settings read failed]",
+            message=frappe.get_traceback(),
+        )
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f05":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _is_f05_effectively_missing(value) -> bool:
+    """
+    f05 未填写判定：
+    - 空值、空串、0/0.0/0.000 都视为未填写
+    """
+    if value is None:
+        return True
+
+    text = str(value).strip()
+    if not text:
+        return True
+
+    try:
+        return float(text) == 0.0
+    except Exception:
+        return False
+
+
+def _f05_required_lock(doc):
+    """
+    f05 必填锁（只处理 f05）：
+    - 配置为必填时，f05 为空或为 0 则拦截
+    """
+    if not _is_f05_required_by_settings():
+        return
+    if _is_f05_effectively_missing(doc.get("f05")):
+        frappe.throw("字段规则：f05(包数/袋数)不能为空或0")
+
+
+def _is_f06_required_by_settings() -> bool:
+    """
+    f06 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f06' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f06":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f06_required_lock(doc):
+    """
+    f06 必填锁（只处理 f06）：
+    - 配置为必填时，f06 为空则拦截
+    """
+    if not _is_f06_required_by_settings():
+        return
+    if not (doc.get("f06") or "").strip():
+        frappe.throw("字段规则：f06(厂家批号)不能为空")
+
+
+def _is_f07_required_by_settings() -> bool:
+    """
+    f07 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f07' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f07":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f07_required_lock(doc):
+    """
+    f07 必填锁（只处理 f07）：
+    - 配置为必填时，f07 为空则拦截
+    """
+    if not _is_f07_required_by_settings():
+        return
+    if not (doc.get("f07") or "").strip():
+        frappe.throw("字段规则：f07(车牌号)不能为空")
+
+
 def _is_f08_required_by_settings() -> bool:
     """
     f08 必填开关（配置驱动）：
@@ -236,6 +427,86 @@ def _f08_required_lock(doc):
         return
     if not (doc.get("f08") or "").strip():
         frappe.throw("字段规则：f08(库位)不能为空")
+
+
+def _is_f10_required_by_settings() -> bool:
+    """
+    f10 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f10' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f10":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _is_f10_effectively_missing(value) -> bool:
+    """
+    f10 未填写判定：
+    - 空值、空串、0/0.0/0.000 都视为未填写
+    """
+    if value is None:
+        return True
+
+    text = str(value).strip()
+    if not text:
+        return True
+
+    try:
+        return float(text) == 0.0
+    except Exception:
+        return False
+
+
+def _f10_required_lock(doc):
+    """
+    f10 必填锁（只处理 f10）：
+    - 配置为必填时，f10 为空或为 0 则拦截
+    """
+    if not _is_f10_required_by_settings():
+        return
+    if _is_f10_effectively_missing(doc.get("f10")):
+        frappe.throw("字段规则：f10(送货重量(吨))不能为空或0")
+
+
+def _is_f11_required_by_settings() -> bool:
+    """
+    f11 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f11' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f11":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f11_required_lock(doc):
+    """
+    f11 必填锁（只处理 f11）：
+    - 配置为必填时，f11 为空则拦截
+    """
+    if not _is_f11_required_by_settings():
+        return
+    if not (doc.get("f11") or "").strip():
+        frappe.throw("字段规则：f11(备注说明)不能为空")
 
 
 def _evidence_lock(doc):
