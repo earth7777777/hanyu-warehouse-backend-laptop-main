@@ -17,6 +17,8 @@ def validate_rm_inbound(doc, method=None):
     # 先保留您原来已经跑通的两件事（顺序不动）
     _weight_audit(doc)
     _location_mix_lock(doc)
+    _f01_required_lock(doc)
+    _f08_required_lock(doc)
 
     # 再追加三把锁（按您要求“加在下面”）
     _evidence_lock(doc)
@@ -103,6 +105,68 @@ def _location_mix_lock(doc):
     occupied_material = occ.get("material")
     if occupied_material and occupied_material != material_name:
         frappe.throw("禁止混放：该库位已被其他物料占用")
+
+
+def _is_f01_required_by_settings() -> bool:
+    """
+    f01 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f01' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f01":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f01_required_lock(doc):
+    """
+    f01 必填锁（只处理 f01）：
+    - 配置为必填时，f01 为空则拦截
+    """
+    if not _is_f01_required_by_settings():
+        return
+    if not (doc.get("f01") or "").strip():
+        frappe.throw("字段规则：f01(入库物料)不能为空")
+
+
+def _is_f08_required_by_settings() -> bool:
+    """
+    f08 必填开关（配置驱动）：
+    - 读取 Warehouse Settings.field_map 子表中 target_field='f08' 的 required
+    - 未配置时默认不强制（保持当前放行行为）
+    """
+    try:
+        settings = frappe.get_single("Warehouse Settings")
+    except Exception:
+        return False
+
+    for row in (settings.get("field_map") or []):
+        target_field = (getattr(row, "target_field", None) or "").strip()
+        if target_field != "f08":
+            continue
+        return int(getattr(row, "required", 0) or 0) == 1
+
+    return False
+
+
+def _f08_required_lock(doc):
+    """
+    f08 必填锁（只处理 f08）：
+    - 配置为必填时，f08 为空则拦截
+    """
+    if not _is_f08_required_by_settings():
+        return
+    if not (doc.get("f08") or "").strip():
+        frappe.throw("字段规则：f08(库位)不能为空")
 
 
 def _evidence_lock(doc):
